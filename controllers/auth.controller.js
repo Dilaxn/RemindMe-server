@@ -117,6 +117,49 @@ exports.activationController = (req, res) => {
   }
 };
 
+//Added for auth
+exports.authController = (req, res) => {
+  const { token } = req.body;
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        console.log('Activation error');
+        return res.status(401).json({
+          errors: 'Expired link. Signup again'
+        });
+      } else {
+        const { name, email, password } = jwt.decode(token);
+        console.log("name"+name);
+        console.log(email);
+        // const user = new User({
+        //   name,
+        //   email,
+        //   password
+        // });
+        //
+        // user.save((err, user) => {
+        //   if (err) {
+        //     console.log('Save error', errorHandler(err));
+        //     return res.status(401).json({
+        //       errors: errorHandler(err)
+        //     });
+        //   } else {
+        //     return res.json({
+        //       success: true,
+        //       message: user,
+        //       message: 'Signup success'
+        //     });
+        //   }
+        // });
+      }
+    });
+  } else {
+    return res.json({
+      message: 'error happening please try again'
+    });
+  }
+};
+
 exports.signinController = (req, res) => {
   const { email, password } = req.body;
   const errors = validationResult(req);

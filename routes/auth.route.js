@@ -1,4 +1,5 @@
 const express = require('express')
+const {authController} = require("../controllers/auth.controller");
 const router = express.Router()
 
 // Load Controllers
@@ -28,6 +29,7 @@ router.post('/login',
     validLogin, signinController)
 
 router.post('/activation', activationController)
+router.post('/auth', authController);
 
 // forgot reset password
 router.put('/forgotpassword', forgotPasswordValidator, forgotPasswordController);
