@@ -120,6 +120,7 @@ exports.activationController = (req, res) => {
 //Added for auth
 exports.authController = (req, res) => {
   const { token } = req.body;
+  console.log("token : ", token);
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
@@ -128,9 +129,23 @@ exports.authController = (req, res) => {
           errors: 'Expired link. Signup again'
         });
       } else {
-        const { name, email, password } = jwt.decode(token);
-        console.log("name"+name);
-        console.log(email);
+
+        const {_id,iat,exp} = jwt.decode(token);
+        User.findOne({
+          _id
+        }).exec((err, user) => {
+          if (user) {
+            console.log(user)
+            return res.status(200).json({
+            name:user.name,email:user.email,role:user.role
+            });
+          }
+        else {
+            console.log("error")
+          }
+
+      })
+        // console.log("name"+name);
         // const user = new User({
         //   name,
         //   email,
