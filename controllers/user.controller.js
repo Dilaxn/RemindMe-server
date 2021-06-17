@@ -1,6 +1,5 @@
 const User = require('../models/auth.model');
 const expressJwt = require('express-jwt');
-
 exports.readController = (req, res) => {
     const userId = req.params.id;
     User.findById(userId).exec((err, user) => {
@@ -57,3 +56,4 @@ exports.updateController = (req, res) => {
         });
     });
 };
+

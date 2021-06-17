@@ -139,12 +139,73 @@ exports.authController = (req, res) => {
             return res.status(200).json({
             name:user.name,email:user.email,role:user.role
             });
+            //
+            req.token = token;
+            next();
           }
         else {
             console.log("error")
           }
 
       })
+        // console.log("name"+name);
+        // const user = new User({
+        //   name,
+        //   email,
+        //   password
+        // });
+        //
+        // user.save((err, user) => {
+        //   if (err) {
+        //     console.log('Save error', errorHandler(err));
+        //     return res.status(401).json({
+        //       errors: errorHandler(err)
+        //     });
+        //   } else {
+        //     return res.json({
+        //       success: true,
+        //       message: user,
+        //       message: 'Signup success'
+        //     });
+        //   }
+        // });
+      }
+    });
+  } else {
+    return res.json({
+      message: 'error happening please try again'
+    });
+  }
+};
+
+exports.authMidController = (req, res,next) => {
+  const { token } = req.body;
+  console.log("token : ", token);
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        console.log('Activation error');
+        return res.status(401).json({
+          errors: 'Expired link. Signup again'
+        });
+      } else {
+
+        const {_id,iat,exp} = jwt.decode(token);
+        User.findOne({
+          _id
+        }).exec((err, user) => {
+          if (user) {
+            console.log(user)
+            //
+            req.token = token;
+            req.user=user;
+            next();
+          }
+          else {
+            console.log("error")
+          }
+
+        })
         // console.log("name"+name);
         // const user = new User({
         //   name,
