@@ -3,6 +3,7 @@ const expressJwt = require('express-jwt');
 const _ = require('lodash');
 const { OAuth2Client } = require('google-auth-library');
 const fetch = require('node-fetch');
+const sharp = require('sharp');
 
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
@@ -571,30 +572,36 @@ exports.facebookController = (req, res) => {
 };
 
 
-exports.readAProfilePicture  = async (req, res) => {
+exports.readProfilePicture  = async (req, res) => {
   try {
-    const employee = await Employee.findById(req.params.emp_id);
-    if (!employee || !employee.avatar) {
+    const user = await User.findById(req.params.emp_id);
+    if (!user || !user.avatar) {
       res.status(404).send({message: 'could not found'});
       return;
     }
 
     res.set('Content-Type', 'image/png');
-    res.send(employee.avatar);
+    res.send(user.avatar);
   } catch (e) {
     res.status(500).send({message: 'an internal error'});
   }
 }
 
-exports.updateProfilePic   = async (emp_id, pic) => {
+exports.updateProfilePic   = async (req, res) => {
+  const emp_id=req.body.employee
+  console.log(emp_id)
+  const pic= req.file.buffer
+
   const user = await User.findById(emp_id);
+  console.log(user)
   if (!user) {
     return null;
   }
 
   user.avatar = await sharp(pic).resize({width: 200, height: 200}).png().toBuffer();
   await user.save();
-  return user.avatar;
+  res.set('Content-Type', 'image/png');
+  res.send(user.avatar);
 }
 // exports.updateMyProfilePicture   = async (req, res) => {
 //   try {
