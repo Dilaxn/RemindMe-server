@@ -28,6 +28,9 @@ const userScheama = new mongoose.Schema(
       data: String,
       default: ''
     },
+      avatar: {
+          type: Buffer
+      },
   },
   {
     timestamps: true

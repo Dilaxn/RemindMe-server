@@ -569,3 +569,50 @@ exports.facebookController = (req, res) => {
       })
   );
 };
+
+
+exports.readAProfilePicture  = async (req, res) => {
+  try {
+    const employee = await Employee.findById(req.params.emp_id);
+    if (!employee || !employee.avatar) {
+      res.status(404).send({message: 'could not found'});
+      return;
+    }
+
+    res.set('Content-Type', 'image/png');
+    res.send(employee.avatar);
+  } catch (e) {
+    res.status(500).send({message: 'an internal error'});
+  }
+}
+
+exports.updateProfilePic   = async (emp_id, pic) => {
+  const user = await User.findById(emp_id);
+  if (!user) {
+    return null;
+  }
+
+  user.avatar = await sharp(pic).resize({width: 200, height: 200}).png().toBuffer();
+  await user.save();
+  return user.avatar;
+}
+// exports.updateMyProfilePicture   = async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       res.status(400).send({message: 'file not received'});
+//       return;
+//     }
+//
+//     const avatar = await updateProfilePic(req.user.employee, req.file.buffer);
+//     if (!avatar) {
+//       res.status(404).send({message: 'employee not found'});
+//       return;
+//     }
+//
+//     res.set('Content-Type', 'image/png');
+//     res.send(avatar);
+//   } catch (e) {
+//     res.status(500).send({message: 'an internal error'});
+//   }
+// }
+

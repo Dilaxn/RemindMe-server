@@ -1,4 +1,5 @@
 const express = require('express')
+const {updateProfilePic} = require("../controllers/auth.controller");
 const {readAllUsers} = require("../controllers/auth.controller");
 const {authController} = require("../controllers/auth.controller");
 const router = express.Router()
@@ -41,4 +42,9 @@ router.put('/resetpassword', resetPasswordValidator, resetPasswordController);
 // Google and Facebook Login
 router.post('/googlelogin', googleController)
 router.post('/facebooklogin', facebookController)
+
+//update profile pic
+router.patch('/pic', profilePicUpload.single('avatar'), updateProfilePic);
+// router.post('/pic', updateProfilePic)
+
 module.exports = router
