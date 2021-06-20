@@ -1,4 +1,5 @@
 const express = require('express')
+const {readAllUsers} = require("../controllers/auth.controller");
 const {authController} = require("../controllers/auth.controller");
 const router = express.Router()
 
@@ -30,6 +31,8 @@ router.post('/login',
 
 router.post('/activation', activationController)
 router.post('/auth', authController);
+
+router.get('/readAllUsers', readAllUsers);
 
 // forgot reset password
 router.put('/forgotpassword', forgotPasswordValidator, forgotPasswordController);

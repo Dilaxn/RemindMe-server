@@ -137,7 +137,7 @@ exports.authController = (req, res) => {
           if (user) {
             console.log(user)
             return res.status(200).json({
-            name:user.name,email:user.email,role:user.role
+            name:user.name,email:user.email,role:user.role,Id:_id
             });
             //
             req.token = token;
@@ -235,6 +235,23 @@ exports.authMidController = (req, res,next) => {
     });
   }
 };
+
+exports.readAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).select({ "email": 1, "_id": 1,"name":1});
+
+    if (!users) {
+      res.status(404).send({message: 'not found'});
+      return;
+    }
+    else if(users.length === 0){
+      res.send([]);
+    }
+    res.send(users);
+  }catch (e) {
+    res.status(500).send(e);
+  }
+}
 
 exports.signinController = (req, res) => {
   const { email, password } = req.body;

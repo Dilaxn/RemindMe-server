@@ -61,7 +61,9 @@ exports.tasksReadController = async (req, res) => {
 
 exports.tasksDeleteController  = async (req, res) => {
     try {
+
         const tasks = req.body.tasks;
+        console.log(req.headers.authorization)
 
         if (!tasks || tasks.length === 0 || !Array.isArray(tasks)) {
             res.status(400).send({message: 'could not delete'});
@@ -74,9 +76,44 @@ exports.tasksDeleteController  = async (req, res) => {
             const deleted = await Task.findById(task).select();
 
             if (deleted) {
-                deleted.doneBy = "sdftdf78fsdf68";
+                deleted.doneBy = req.headers.authorization;
                 console.log(deleted);
                 deleted.save();
+                res.status(200).send({message: 'Successfully deleted'});
+                // response.push(deleted);
+            }
+        }
+
+        if (response.length === 0) {
+            res.status(404).send({message: 'non of the job title were deleted'});
+            return;
+        }
+
+        res.send(response);
+    }catch (e) {
+        res.status(500).send(e);
+    }
+}
+
+exports.tasksFullDeleteController  = async (req, res) => {
+    try {
+
+        const tasks = req.body.tasks;
+        console.log(req.headers.authorization)
+
+        if (!tasks || tasks.length === 0 || !Array.isArray(tasks)) {
+            res.status(400).send({message: 'could not delete'});
+            return;
+        }
+
+        const response = [];
+
+        for (const task of tasks) {
+            const deleted = await Task.findById(task).select();
+
+            if (deleted) {
+                deleted.remove();
+                res.status(200).send({message: 'Successfully deleted'});
                 // response.push(deleted);
             }
         }
