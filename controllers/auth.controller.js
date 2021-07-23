@@ -623,3 +623,18 @@ exports.updateProfilePic   = async (req, res) => {
 //   }
 // }
 
+
+exports.updateName  = async (req, res) => {
+  const keys =req.body;
+    const user = await User.findById(req.body._id);
+    if (!user) {
+      res.status(404).send({message: 'employee not found'});
+    } else {
+user.name=req.body.name;
+      await user.save();
+      res.send(user);
+    }
+
+}
+
+

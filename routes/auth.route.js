@@ -1,5 +1,6 @@
 const express = require('express')
 const error = require("../helpers/error");
+const {updateName} = require("../controllers/auth.controller");
 const {readProfilePicture} = require("../controllers/auth.controller");
 const {profilePicUpload} = require("../helpers/file_upload");
 const {updateProfilePic} = require("../controllers/auth.controller");
@@ -49,6 +50,7 @@ router.post('/facebooklogin', facebookController)
 //update profile pic
 router.patch('/pic', profilePicUpload.single('avatar'), updateProfilePic,error);
 router.get('/:emp_id/pic', readProfilePicture);
+router.patch('/name', updateName);
 
 // router.post('/pic', updateProfilePic)
 

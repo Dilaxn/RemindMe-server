@@ -11,7 +11,7 @@ const { errorHandler } = require('../helpers/dbErrorHandling');
 exports.taskAddController = (req, res) => {
     const { taskName, taskDescription, comments,users } = req.body;
     console.log(req.user)
-    const createdBy = req.user._id;
+    const createdBy = req.user.email;
     const doneBy = "";
     const errors = validationResult(req);
     console.log("ok")
